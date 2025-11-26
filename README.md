@@ -12,7 +12,7 @@ It integrates:
 
 - ESM2 protein language models  
 - Embedding-based Extra Trees classifier  
-- Prediction and Protein Scanning modules  
+- Prediction and Protein Design modules  
 - FASTA and simple sequence formats  
 
 Webserver (placeholder):  
