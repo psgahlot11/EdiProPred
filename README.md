@@ -139,6 +139,7 @@ CSV with score, prediction, probability, and details.
 Job	Function
 1️⃣ Prediction	Predict edible vs. non-edible
 2️⃣ Protein Scanning	Sliding-window analysis to find edible segments
+
 📑 Package Contents
 | File          | Description               |
 | ------------- | ------------------------- |
@@ -148,7 +149,7 @@ Job	Function
 | edipropred.py | Main tool                 |
 | example.fasta | Sample FASTA input        |
 
-📦 PIP Installation (Reference)
+📦 Install via PIP (again for convenience)
 pip install edipropred
 
 🚀 Start predicting edible proteins with EdiProPred today!
