@@ -189,7 +189,8 @@ usage: edipropred.py [-h]
 | Job | Description |
 |-----|-------------|
 | 1 | Prediction |
-| 2 | Protein Scanning |
+| 2 | Mutant Design |
+| 3 | All Possible Mutants |
 
 ---
 
