@@ -22,22 +22,18 @@ http://webs.iiitd.edu.in/raghava/edipropred
 
 ## 📚 Reference
 
-*(Replace with your citation)*  
-**Gahlot P.S., Raghava G.P.S.**, A machine learning framework for identifying edible proteins using protein language models, 2025.
+coming soon 
+
 
 ---
 
-## 🖼️ EdiProPred Workflow
 
-![EdiProPred Workflow](https://github.com/raghavagps/NTxPred2/blob/main/NTxPred2_workflow.png)
 
----
-
-# 🧪 Quick Start
+# 🧪 Quick Start for Reproducibility
 
 ```bash
 # Clone repository
-git clone https://github.com/YOUR_GITHUB/edipropred.git
+git clone https://github.com/raghavagps/edipropred.git
 cd edipropred
 
 # Create environment
@@ -79,21 +75,19 @@ python >= 3.10
 ### Required Libraries
 
 ```
-numpy
-pandas
-scikit-learn
-torch
-transformers
-biopython
-joblib
-tqdm
-onnxruntime
+python=3.12.5 
+torch==2.6.0+cu124
+scikit-learn==1.3.2.
+transformers==4.51.3 
+biopython==1.84 
+fair-esm==2.0.0 
+pandas==2.1.4
 ```
 
 Install manually:
 
 ```bash
-pip install numpy pandas scikit-learn torch transformers biopython tqdm joblib onnxruntime
+pip install numpy pandas scikit-learn torch transformers biopython fair-esm joblib 
 ```
 
 ---
@@ -130,11 +124,11 @@ EdiProPred predicts:
 
 | Model | Description |
 |-------|-------------|
-| ESM2-t30 Direct | Fine-tuned model for fast predictions |
+| ESM2-t33 Direct | Fine-tuned model for fast predictions |
 | ESM2 + Extra Trees | Embeddings + Extra Trees classifier |
 | Combined Model | Automatically selects best method |
 
-**Default model:** ESM2-t30 Direct
+**Default model:** ESM2-t33 Direct
 
 ---
 
