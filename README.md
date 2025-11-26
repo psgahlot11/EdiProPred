@@ -6,13 +6,13 @@ A machine learning–based platform for predicting **edible and non-edible prote
 
 ## 📌 Introduction
 
-**EdiProPred** supports food science, nutrition biology, crop genomics, and protein engineering by predicting edible vs. non-edible proteins using modern protein language models.
+**EdiProPred** supports food science, nutrition biology, crop genomics, and protein engineering by predicting whether proteins are edible or non-edible using modern protein language models.
 
 It integrates:
 
 - ESM2 protein language models  
 - Embedding-based Extra Trees classifier  
-- Prediction, Protein Scanning, and Mutant Design modules  
+- Prediction and Protein Scanning modules  
 - FASTA and simple sequence formats  
 
 Webserver (placeholder):  
@@ -190,8 +190,6 @@ usage: edipropred.py [-h]
 |-----|-------------|
 | 1 | Prediction |
 | 2 | Protein Scanning |
-| 3 | Mutant Design |
-| 4 | All Possible Mutants |
 
 ---
 
