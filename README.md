@@ -1,6 +1,6 @@
 # EdiProPred
 
-A machine learning–based platform for predicting **edible and non-edible proteins** from primary amino acid sequences.
+A Large Language–based platform for predicting **edible and non-edible proteins** from primary amino acid sequences.
 
 ---
 
