@@ -126,7 +126,6 @@ EdiProPred predicts:
 |-------|-------------|
 | ESM2-t33 Direct | Fine-tuned model for fast predictions |
 | ESM2 + Extra Trees | Embeddings + Extra Trees classifier |
-| Combined Model | Automatically selects best method |
 
 **Default model:** ESM2-t33 Direct
 
