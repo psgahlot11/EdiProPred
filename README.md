@@ -1,155 +1,225 @@
 # EdiProPred
-A machine learning–based platform for predicting edible and non-edible proteins from primary amino acid sequences.
 
-📌 Introduction
+A machine learning–based platform for predicting **edible and non-edible proteins** from primary amino acid sequences.
 
-EdiProPred is designed to support researchers in food science, nutrition biology, crop genomics, and allergen-free protein engineering by offering accurate prediction of edible vs. non-edible proteins using large-scale protein language models.
+---
 
-The tool integrates:
+## 📌 Introduction
 
-ESM2 protein language models
+**EdiProPred** supports food science, nutrition biology, crop genomics, and protein engineering by predicting edible vs. non-edible proteins using modern protein language models.
 
-Evolutionary embeddings
+It integrates:
 
-Machine Learning classifiers (Extra Trees)
+- ESM2 protein language models  
+- Embedding-based Extra Trees classifier  
+- Prediction, Protein Scanning, and Mutant Design modules  
+- FASTA and simple sequence formats  
 
-EdiProPred offers prediction and Protein scanning features to enhance understanding of protein edibility, identify potential safety concerns, and inform nutritional design.
-
-🔗 Visit the web server (placeholder):
+Webserver (placeholder):  
 http://webs.iiitd.edu.in/raghava/edipropred
 
-📖 Please cite our work when using EdiProPred.
+---
 
-📚 Reference
+## 📚 Reference
 
-Coming soon
+*(Replace with your citation)*  
+**Gahlot P.S., Raghava G.P.S.**, A machine learning framework for identifying edible proteins using protein language models, 2025.
 
+---
 
-🧪 Quick Start for Reproducibility
-# 1. Clone the repository
-git clone https://github.com/raghavagps/edipropred.git
+## 🖼️ EdiProPred Workflow
+
+![EdiProPred Workflow](https://github.com/raghavagps/NTxPred2/blob/main/NTxPred2_workflow.png)
+
+---
+
+# 🧪 Quick Start
+
+```bash
+# Clone repository
+git clone https://github.com/YOUR_GITHUB/edipropred.git
 cd edipropred
 
-# 2. Create and activate environment
+# Create environment
 conda env create -f environment.yml
 conda activate EdiProPred
 
-# 3. Download pre-trained model (ESM + Classifier)
-# Place the model folder inside the root directory
+# Download model and extract into project root
 
-# 4. Run prediction on sample FASTA
-python edipropred.py -i example.fasta -o results.csv -m 1 -j 1 -wd working_path
+# Run prediction
+python edipropred.py -i example.fasta -o output.csv -m 1 -j 1 -wd workdir
+```
 
-🛠️ Installation Options
-🔹 PIP Installation
+---
+
+# 🛠 Installation
+
+## PIP Installation
+
+```bash
 pip install edipropred
+```
 
+Check help:
 
-Check options:
-
+```bash
 edipropred -h
+```
 
-🔹 Standalone Installation Requirements
-Python Version
+---
+
+## Manual Installation
+
+### Python Version
+
+```
 python >= 3.10
+```
 
-Required Libraries
-python=3.12.5 
-torch==2.6.0+cu124
-scikit-learn==1.3.2.
-transformers==4.51.3 
-biopython==1.84 
-fair-esm==2.0.0 
-pandas==2.1.4
+### Required Libraries
 
+```
+numpy
+pandas
+scikit-learn
+torch
+transformers
+biopython
+joblib
+tqdm
+onnxruntime
+```
 
 Install manually:
 
-pip install numpy pandas scikit-learn torch transformers biopython tqdm joblib 
+```bash
+pip install numpy pandas scikit-learn torch transformers biopython tqdm joblib onnxruntime
+```
 
-🔹 Installation using environment.yml
+---
+
+## Install using environment.yml
+
+```bash
 conda env create -f environment.yml
 conda activate EdiProPred
+```
 
-⚠️ Important Notes
+---
 
-The ESM2 model and trained classifier are large files.
+# ⚠️ Model Download
 
-Download the zipped model from the Download Page (placeholder):
+Download the ESM2 model and trained classifier from:
+
 https://webs.iiitd.edu.in/raghava/edipropred/download.html
 
-Extract before running predictions.
+Extract the zip file into the project root directory before running predictions.
 
-🔬 Classification
+---
 
-EdiProPred classifies input sequences into:
+# 🔬 Classification Overview
 
-✔ Edible Proteins
+EdiProPred predicts:
 
-Likely safe and suitable for consumption.
+- **Edible proteins**  
+- **Non-edible proteins**
 
-✔ Non-Edible Proteins
+---
 
-May be toxic, allergenic, antinutritional, or structurally unsuitable.
+## Model Options
 
-🔹 Model Options
-ESM2-t33 Direct	Fast prediction using fine-tuned ESM2 model
-ESM2 + Extra Trees	Embeddings + ET classifier
+| Model | Description |
+|-------|-------------|
+| ESM2-t30 Direct | Fine-tuned model for fast predictions |
+| ESM2 + Extra Trees | Embeddings + Extra Trees classifier |
+| Combined Model | Automatically selects best method |
 
-Default Model: ESM2-t33 (Direct Model)
+**Default model:** ESM2-t30 Direct
 
-🚀 Usage
-🔹 Minimum usage
+---
+
+# 🚀 Usage
+
+```bash
 edipropred.py -h
+```
 
+Run basic prediction:
 
-Predict from FASTA:
-
+```bash
 edipropred.py -i example.fasta
+```
 
-🔹 Full Usage
+---
+
+## Full Usage
+
+```bash
 usage: edipropred.py [-h]
                      [-i INPUT]
                      [-o OUTPUT]
                      [-t THRESHOLD]
                      [-j {1,2,3,4}]
-                     [-m {1,2}]
-                     [-wd WORKING DIRECTORY]
+                     [-m {1,2,3}]
+                     [-wd WORKING_DIRECTORY]
+```
 
-Required Arguments
-Argument	Description
--i INPUT	Input FASTA or simple format file
--o OUTPUT	Output CSV (default: outfile.csv)
--t THRESHOLD	Decision threshold (0–1, default: 0.5)
--j	Job type: 1-Predict, 2-Scan, 3-Design, 4-All Mutants
--m {1,2,3}	Model selection: 1-ESM2, 2-ET, 3-Combined
--wd	Working directory path
-📂 Input & Output Formats
-Input:
+### Arguments
 
-FASTA
+| Argument | Description |
+|----------|-------------|
+| `-i` | Input sequence file |
+| `-o` | Output CSV file |
+| `-t` | Threshold (0–1) |
+| `-j` | Job type |
+| `-m` | Model selection |
+| `-wd` | Working directory |
 
-Simple Sequence Format (one per line)
+---
 
-Output:
+# 📂 Input & Output
 
-CSV with score, prediction, probability, and details.
+### Input Formats
 
-🔍 Job Types & Features
-Job	Function
-1️⃣ Prediction	Predict edible vs. non-edible
-2️⃣ Protein Scanning	Sliding-window analysis to find edible segments
+- FASTA  
+- One sequence per line  
 
-📑 Package Contents
-| File          | Description               |
-| ------------- | ------------------------- |
-| INSTALLATION  | Installation instructions |
-| LICENSE       | License info              |
-| README.md     | Project documentation     |
-| edipropred.py | Main tool                 |
-| example.fasta | Sample FASTA input        |
+### Output
 
-📦 Install via PIP (again for convenience)
+- CSV file with predictions, probabilities, and model scores
+
+---
+
+# 🔍 Job Types
+
+| Job | Description |
+|-----|-------------|
+| 1 | Prediction |
+| 2 | Protein Scanning |
+| 3 | Mutant Design |
+| 4 | All Possible Mutants |
+
+---
+
+# 📑 Package Contents
+
+| File | Description |
+|------|-------------|
+| INSTALLATION | Installation instructions |
+| LICENSE | License info |
+| README.md | This file |
+| edipropred.py | Main script |
+| example.fasta | Sample FASTA input |
+
+---
+
+# 📦 Install via PIP
+
+```bash
 pip install edipropred
+```
 
-🚀 Start predicting edible proteins with EdiProPred today!
+---
+
+# 🚀 Start predicting edible proteins with EdiProPred today!
+
