@@ -140,12 +140,14 @@ Job	Function
 1️⃣ Prediction	Predict edible vs. non-edible
 2️⃣ Protein Scanning	Sliding-window analysis to find edible segments
 📑 Package Contents
-File	Description
-INSTALLATION	Installation instructions
-LICENSE	License
-README.md	This documentation
-edipropred.py	Main prediction script
-example.fasta	Sample input
+| File          | Description               |
+| ------------- | ------------------------- |
+| INSTALLATION  | Installation instructions |
+| LICENSE       | License info              |
+| README.md     | Project documentation     |
+| edipropred.py | Main tool                 |
+| example.fasta | Sample FASTA input        |
+
 📦 PIP Installation (Reference)
 pip install edipropred
 
