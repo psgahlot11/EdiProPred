@@ -38,7 +38,7 @@ cd edipropred
 
 # Create environment
 conda env create -f environment.yml
-conda activate EdiProPred
+conda activate edipropred
 
 # Download model and extract into project root
 
