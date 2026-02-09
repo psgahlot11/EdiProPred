@@ -1,4 +1,4 @@
-name: edipropred_test
+name: edipropred
 channels:
   - defaults
 dependencies:
