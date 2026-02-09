@@ -2,7 +2,7 @@
 # EDIpropred
 # Prediction of Edible / Non-Edible proteins from sequence
 # Developed by Prof. G. P. S. Raghava's group
-# https://webs.iiitd.edu.in/raghava/EDIpropred/
+# https://webs.iiitd.edu.in/raghava/edipropred/
 #########################################################################
 
 import argparse
@@ -14,6 +14,7 @@ import pandas as pd
 import torch
 import torch.nn as nn
 from tqdm import tqdm
+from huggingface_hub import hf_hub_download
 
 warnings.filterwarnings("ignore")
 
@@ -23,13 +24,16 @@ warnings.filterwarnings("ignore")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # =========================================================
-# Paths
+# Hugging Face repository (MODEL SOURCE)
 # =========================================================
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.join(BASE_DIR, "Model", "saved_model_t33")
+HF_REPO_ID = "raghavagps-group/edipropred"
+HF_MODEL_FILE = "final_full_model_object.pth"
+HF_ALPHABET_FILE = "esm_alphabet.pth"
 
-MODEL_PATH = os.path.join(MODEL_DIR, "final_full_model_object.pth")
-ALPHABET_PATH = os.path.join(MODEL_DIR, "esm_alphabet.pth")
+# Local cache directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CACHE_DIR = os.path.join(BASE_DIR, "hf_cache")
+os.makedirs(CACHE_DIR, exist_ok=True)
 
 # =========================================================
 # Model definition (MUST match trained model)
@@ -45,6 +49,23 @@ class ProteinClassifier(nn.Module):
             out = self.esm_model(tokens, repr_layers=[33])
         emb = out["representations"][33].mean(1)
         return self.fc(emb)
+
+# =========================================================
+# Download model files from Hugging Face
+# =========================================================
+print("🔄 Checking / downloading model files from Hugging Face...")
+
+MODEL_PATH = hf_hub_download(
+    repo_id=HF_REPO_ID,
+    filename=HF_MODEL_FILE,
+    cache_dir=CACHE_DIR
+)
+
+ALPHABET_PATH = hf_hub_download(
+    repo_id=HF_REPO_ID,
+    filename=HF_ALPHABET_FILE,
+    cache_dir=CACHE_DIR
+)
 
 # =========================================================
 # Load model + alphabet
@@ -117,22 +138,17 @@ def predict_from_dataframe(df, threshold, batch_size=4):
 STD_AA = "ACDEFGHIKLMNPQRSTVWY"
 
 def generate_mutant(seq, residues, position):
-    position -= 1  # 1-based → 0-based
-
+    position -= 1
     if position < 0 or position >= len(seq):
         raise ValueError("Mutation position out of range")
-
     if any(r not in STD_AA for r in residues):
         raise ValueError("Invalid amino acid in residues")
 
     if len(residues) == 1:
         return seq[:position] + residues + seq[position + 1:]
-
     if len(residues) == 2:
         return seq[:position] + residues + seq[position + 2:]
-
     raise ValueError("Residues must be 1 or 2 amino acids")
-
 
 def design_module(df, residues, position, threshold):
     if len(df) != 1:
@@ -140,9 +156,6 @@ def design_module(df, residues, position, threshold):
 
     original_seq = df.iloc[0]["Sequence"]
     seq_id = df.iloc[0]["SeqID"]
-
-    if len(original_seq) > 400:
-        raise ValueError("Sequence length must be ≤ 400 aa")
 
     mutant_seq = generate_mutant(original_seq, residues, position)
 
@@ -157,8 +170,7 @@ def design_module(df, residues, position, threshold):
         threshold=threshold
     )
 
-    final_df = pd.concat([design_df["Type"], pred_df], axis=1)
-    return final_df
+    return pd.concat([design_df["Type"], pred_df], axis=1)
 
 # =========================================================
 # Main
@@ -170,42 +182,24 @@ def main():
 
     parser.add_argument("-i", "--input", required=True, help="Input FASTA / text file")
     parser.add_argument("-o", "--output", default="output.csv", help="Output CSV")
-    parser.add_argument("-t", "--threshold", type=float, default=0.5, help="Threshold (0–1)")
-    parser.add_argument(
-        "-j", "--job",
-        type=int,
-        choices=[1, 3],
-        default=1,
-        help="Job: 1 Prediction | 3 Design"
-    )
-    parser.add_argument("-p", "--position", type=int, help="Mutation position (design)")
-    parser.add_argument("-r", "--residues", type=str, help="Mutant residues (design)")
-    parser.add_argument("-wd", "--working", default=os.getcwd(), help="Working directory")
+    parser.add_argument("-t", "--threshold", type=float, default=0.5)
+    parser.add_argument("-j", "--job", type=int, choices=[1, 3], default=1,
+                        help="1 Prediction | 3 Design")
+    parser.add_argument("-p", "--position", type=int, help="Mutation position")
+    parser.add_argument("-r", "--residues", type=str, help="Mutant residues")
+    parser.add_argument("-wd", "--working", default=os.getcwd())
 
     args = parser.parse_args()
     os.makedirs(args.working, exist_ok=True)
-
-    print("\n===== EDIpropred =====")
-    print(f"Input     : {args.input}")
-    print(f"Job       : {args.job}")
-    print(f"Threshold : {args.threshold}")
-    print(f"Output    : {args.output}\n")
 
     df = readseq(args.input)
 
     if args.job == 1:
         result = predict_from_dataframe(df, args.threshold)
-
-    elif args.job == 3:
+    else:
         if args.position is None or args.residues is None:
             raise ValueError("Design job requires --position and --residues")
-
-        result = design_module(
-            df,
-            residues=args.residues.upper(),
-            position=args.position,
-            threshold=args.threshold
-        )
+        result = design_module(df, args.residues.upper(), args.position, args.threshold)
 
     out_path = os.path.join(args.working, args.output)
     result.to_csv(out_path, index=False)
