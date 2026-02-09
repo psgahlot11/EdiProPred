@@ -205,11 +205,7 @@ usage: edipropred.py [-h]
 
 ---
 
-# 📦 Install via PIP
 
-```bash
-pip install edipropred
-```
 
 ---
 
