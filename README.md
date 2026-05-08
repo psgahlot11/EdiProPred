@@ -23,7 +23,8 @@ http://webs.iiitd.edu.in/raghava/edipropred
 ## 📚 Reference
 
 coming soon 
-
+## Zenodo
+https://doi.org/10.5281/zenodo.19881149
 
 ---
 
